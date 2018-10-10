@@ -3,10 +3,12 @@ package com.example.sky0621;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.when;
 
+import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -27,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 public class HelloAppEngineTest {
   private static final String FAKE_URL = "fake.fk/hello";
   // Set up a helper so that the ApiProxy returns a valid environment for local testing.
-  private final LocalServiceTestHelper helper = new LocalServiceTestHelper();
+  private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
 
   @Mock private HttpServletRequest mockRequest;
   @Mock private HttpServletResponse mockResponse;
@@ -70,4 +72,15 @@ public class HelloAppEngineTest {
       .named("HelloAppEngine.getInfo")
       .containsMatch("^Version:\\s+.+OS:\\s+.+User:\\s");
   }
+
+  @Test
+  @Ignore
+  public void 書籍名をPOSTするとDatastoreに登録される() {
+
+//    servletUnderTest.doPost(mockRequest, mockResponse);
+
+    assertThat(responseWriter.toString())
+            .comparesEqualTo("{\"bookName\":\"\"}");
+  }
+
 }
