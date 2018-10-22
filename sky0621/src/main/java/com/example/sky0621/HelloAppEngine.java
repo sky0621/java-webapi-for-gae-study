@@ -1,11 +1,13 @@
 package com.example.sky0621;
 
+import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.utils.SystemProperty;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -36,12 +38,13 @@ public class HelloAppEngine extends HttpServlet {
 
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    PrintWriter w = resp.getWriter();
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+
     req.getParameterMap().forEach((k, v) -> {
-      w.printf("KEY:%s\n", k);
-      w.println("VALUE:");
-      Arrays.stream(v).forEach(s -> w.println(s));
-      w.print("\n");
+      Key key = KeyFactory.createKey("book", 1);
+      Entity e = new Entity(key);
+      e.setProperty("bookName", Arrays.stream(v).collect(Collectors.joining()));
+      ds.put(e);
     });
   }
 

@@ -3,6 +3,7 @@ package com.example.sky0621;
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.when;
 
+import com.google.appengine.api.datastore.*;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 
@@ -15,9 +16,13 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -74,13 +79,26 @@ public class HelloAppEngineTest {
   }
 
   @Test
-  @Ignore
-  public void 書籍名をPOSTするとDatastoreに登録される() {
+  public void 書籍名をPOSTするとDatastoreに登録される() throws EntityNotFoundException, ServletException, IOException {
+    /*
+     * SetUp
+     */
+    Map<String, String[]> parameterMap = new HashMap<>();
+    parameterMap.put("bookName", new String[]{"マイクロサービスアーキテクチャ"});
+    when(mockRequest.getParameterMap()).thenReturn(parameterMap);
 
-//    servletUnderTest.doPost(mockRequest, mockResponse);
+    /*
+     * Execute
+     */
+    servletUnderTest.doPost(mockRequest, mockResponse);
 
-    assertThat(responseWriter.toString())
-            .comparesEqualTo("{\"bookName\":\"\"}");
+    /*
+     * Assert
+     */
+    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    Entity e = ds.get(KeyFactory.createKey("book", 1));
+    String microService = (String)e.getProperty("bookName");
+    assertThat(microService).isEqualTo("マイクロサービスアーキテクチャ");
   }
 
 }
