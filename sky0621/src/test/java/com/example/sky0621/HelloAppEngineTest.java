@@ -83,9 +83,8 @@ public class HelloAppEngineTest {
     /*
      * SetUp
      */
-    Map<String, String[]> parameterMap = new HashMap<>();
-    parameterMap.put("bookName", new String[]{"マイクロサービスアーキテクチャ"});
-    when(mockRequest.getParameterMap()).thenReturn(parameterMap);
+    when(mockRequest.getParameter("id")).thenReturn("5");
+    when(mockRequest.getParameter("name")).thenReturn("マイクロサービスアーキテクチャ");
 
     /*
      * Execute
@@ -96,7 +95,7 @@ public class HelloAppEngineTest {
      * Assert
      */
     DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
-    Entity e = ds.get(KeyFactory.createKey("book", 1));
+    Entity e = ds.get(KeyFactory.createKey("book", 5));
     String microService = (String)e.getProperty("bookName");
     assertThat(microService).isEqualTo("マイクロサービスアーキテクチャ");
   }

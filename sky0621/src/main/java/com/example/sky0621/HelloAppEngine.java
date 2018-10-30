@@ -18,34 +18,33 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "HelloAppEngine", value = "/hello")
 public class HelloAppEngine extends HttpServlet {
 
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
-      throws IOException {
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
 
-    Properties properties = System.getProperties();
+        Properties properties = System.getProperties();
 
-    response.setContentType("text/plain");
-    response.getWriter().println("Hello App Engine - Standard using "
-        + SystemProperty.version.get() + " Java " + properties.get("java.specification.version"));
-    response.getWriter().println(SystemProperty.environment.value());
-  }
+        response.setContentType("text/plain");
+        response.getWriter().println("Hello App Engine - Standard using "
+                + SystemProperty.version.get() + " Java " + properties.get("java.specification.version"));
+        response.getWriter().println(SystemProperty.environment.value());
+    }
 
-  public static String getInfo() {
-    return "Version: " + System.getProperty("java.version")
-          + " OS: " + System.getProperty("os.name")
-          + " User: " + System.getProperty("user.name");
-  }
+    public static String getInfo() {
+        return "Version: " + System.getProperty("java.version")
+                + " OS: " + System.getProperty("os.name")
+                + " User: " + System.getProperty("user.name");
+    }
 
-  @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String id = req.getParameter("id");
+        String name = req.getParameter("name");
 
-    req.getParameterMap().forEach((k, v) -> {
-      Key key = KeyFactory.createKey("book", 1);
-      Entity e = new Entity(key);
-      e.setProperty("bookName", Arrays.stream(v).collect(Collectors.joining()));
-      ds.put(e);
-    });
-  }
+        DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
+        Entity e = new Entity(KeyFactory.createKey("book", Integer.parseInt(id)));
+        e.setProperty("bookName", name);
+        ds.put(e);
+    }
 
 }
