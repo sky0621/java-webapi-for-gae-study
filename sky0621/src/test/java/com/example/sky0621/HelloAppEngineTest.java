@@ -79,6 +79,7 @@ public class HelloAppEngineTest {
   }
 
   @Test
+  @Ignore
   public void 書籍名をPOSTするとDatastoreに登録される() throws EntityNotFoundException, ServletException, IOException {
     /*
      * SetUp

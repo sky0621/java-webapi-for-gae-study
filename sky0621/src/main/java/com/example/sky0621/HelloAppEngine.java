@@ -45,6 +45,15 @@ public class HelloAppEngine extends HttpServlet {
         Entity e = new Entity(KeyFactory.createKey("book", Integer.parseInt(id)));
         e.setProperty("bookName", name);
         ds.put(e);
+
+        System.out.println("======================================================");
+        System.out.println("======================================================");
+        System.out.println(BigQueryService.getSql("TEST_001.sql"));
+        System.out.println("======================================================");
+        System.out.println("======================================================");
+        System.out.println(BigQueryService.getSql("TEST_002.sql"));
+        System.out.println("======================================================");
+        System.out.println("======================================================");
     }
 
 }
